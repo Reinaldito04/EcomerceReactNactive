@@ -1,16 +1,21 @@
 import { Stack } from "expo-router";
 import { Animated } from "react-native";
-
+import { StatusBar } from "expo-status-bar";
 // Animación personalizada para el desvanecimiento
-const forFade = ({ current }) => ({
-  cardStyle: {
-    opacity: current.progress, // Desvanecer basado en la progresión
-  },
-});
+
 
 export default function RootLayout() {
   return (
-    <Stack initialRouteName="login">
+
+    <Stack initialRouteName="login" 
+    screenOptions={
+      {
+        animation: "simple_push",
+        
+       
+
+      }
+    }>
       <Stack.Screen
         name="index"
         options={{ headerShown: true, title: "Inicio" }}

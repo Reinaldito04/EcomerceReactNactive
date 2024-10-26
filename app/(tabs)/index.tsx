@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   Dimensions,
   ScrollView,
+  StatusBar,
+  Platform,
 } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
@@ -16,60 +18,42 @@ import ProductsList from "../components/ProductosList";
 
 export default function CategoryTabs() {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [text, setText] = useState("");
-
   const width = Dimensions.get("window").width;
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={{ padding: 20 }}>
-        {/* Cabezal */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#fff",
-              height: 40,
-              width: 40,
-              borderRadius: 15,
-            }}
-          >
-            <Feather name="grid" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.textTitle}>Explore</Text>
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#fff",
-              height: 40,
-              width: 40,
-              borderRadius: 15,
-            }}
-          >
-            <Icon name="search" size={24} color="#000" />
-          </TouchableOpacity>
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View>
-            <Slider />
-          </View>
+      <StatusBar
+        backgroundColor="#dddddd" // Solo Android
+        barStyle="dark-content" // Color de contenido en ambas plataformas
+        translucent={Platform.OS === "ios"} // Para iOS permite translucidez
+      />
 
-          {/* Título de sección de productos */}
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.iconContainer}>
+          <Feather name="grid" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.textTitle}>Explore</Text>
+        <TouchableOpacity style={styles.iconContainer}>
+          <Icon name="search" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Main Content */}
+      <View style={styles.contentContainer}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Slider />
+
+          {/* Sección de categorías */}
           <View style={styles.homeSection}>
             <Text style={styles.textTitle}>Categories</Text>
             <TouchableOpacity>
               <Text style={styles.viewAllText}>View All</Text>
             </TouchableOpacity>
           </View>
-          <View>
-            <TabCategories />
-          </View>
-          <View>
-            <ProductsList />
-          </View>
+          
+          <TabCategories />
+          <ProductsList />
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -77,34 +61,46 @@ export default function CategoryTabs() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#f5f5f5", // Fondo para la zona segura
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
+    paddingHorizontal:10,
+    width: "100%",
+  },
+  contentContainer: {
+    padding: 15,
+  },
   homeSection: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20,
-    marginTop: 10,
-  },
-  safeArea: {
-    flex: 1,
-    padding: 10,
+    marginVertical: 20,
   },
   textTitle: {
     fontSize: 25,
     fontWeight: "bold",
     color: "#000",
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
-    width: "100%",
-  },
   viewAllText: {
     color: "#000",
     fontWeight: "bold",
     fontSize: 16,
-    marginRight: 10,
     textDecorationLine: "underline",
+  },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    height: 40,
+    width: 40,
+    borderRadius: 15,
   },
 });
