@@ -1,37 +1,42 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import { Animated } from "react-native";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// Animación personalizada para el desvanecimiento
+const forFade = ({ current }) => ({
+  cardStyle: {
+    opacity: current.progress, // Desvanecer basado en la progresión
+  },
+});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <Stack initialRouteName="login">
+      <Stack.Screen
+        name="index"
+        options={{ headerShown: true, title: "Inicio" }}
+      />
+      {/* Pantalla de inicio de sesión */}
+      <Stack.Screen
+        name="login"
+        options={{
+          headerShown: true,
+          title: "Iniciar Sesión",
+        }}
+      />
+      <Stack.Screen
+        name="productDetails/index"
+        options={{
+          headerShown: false,
+          title: "Detalles",
+          animation: "fade", // Tipo de animación
+          animationTypeForReplace: "pop", // Tipo de animación al reemplazar
+          // A continuación no se necesita cardStyleInterpolator
+        }}
+      />
+      <Stack.Screen
+        name="(tabs)"
+        options={{ headerShown: false, title: "Home" }}
+      />
+    </Stack>
   );
 }
