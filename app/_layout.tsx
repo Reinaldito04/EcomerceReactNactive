@@ -3,19 +3,15 @@ import { Animated } from "react-native";
 import { StatusBar } from "expo-status-bar";
 // Animación personalizada para el desvanecimiento
 
-
 export default function RootLayout() {
   return (
 
-    <Stack initialRouteName="login" 
-    screenOptions={
-      {
+    <Stack
+      initialRouteName="login"
+      screenOptions={{
         animation: "simple_push",
-        
-       
-
-      }
-    }>
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{ headerShown: true, title: "Inicio" }}
@@ -43,5 +39,6 @@ export default function RootLayout() {
         options={{ headerShown: false, title: "Home" }}
       />
     </Stack>
+
   );
 }

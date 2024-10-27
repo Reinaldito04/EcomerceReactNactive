@@ -4,7 +4,6 @@ import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-
 const NotificationBadge = () => (
   <View style={styles.badge}>
     <Text style={styles.badgeText}>1</Text>
@@ -63,35 +62,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          title: "",
-          tabBarIcon: ({ color, focused }) => (
-            <View>
-              <Ionicons
-                name={focused ? "notifications" : "notifications-outline"}
-                size={24}
-                color={color}
-              />
-              <NotificationBadge />
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "person" : "person-outline"}
-              size={24}
-              color={color}
-            />
-          ),
-        }}
-      />
+      
     </Tabs>
   );
 }

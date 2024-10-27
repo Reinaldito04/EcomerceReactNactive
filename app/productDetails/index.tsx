@@ -11,7 +11,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import Icon from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { useCartStore } from "../components/store/useCartStore";
 
 const ProductDetails = () => {
   const { id, title, image, price, stars, category } = useLocalSearchParams();
@@ -23,6 +23,21 @@ const ProductDetails = () => {
   // Inicializa las animaciones
   const slideAnim = useRef(new Animated.Value(500)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
+
+  const addToCart = useCartStore((state) => state.addToCart);
+  const [cartIcon, setCartIcon] = useState("cart-plus"); // Estado para el ícono del carrito
+  const [iconAnimation, setIconAnimation] = useState(new Animated.Value(1)); // Animación del ícono
+
+  // Producto a añadir al carrito con la estructura requerida
+  const product = {
+    id: parseInt(id as string),
+    title: title as string,
+    image: imageUri as string,
+    price: parseFloat(price as string),
+    quantity: 1,
+    stars :  Number(stars),
+    category: category as string,
+  };
 
   useEffect(() => {
     // Ejecutar animaciones de entrada
@@ -39,12 +54,32 @@ const ProductDetails = () => {
       }),
     ]).start();
   }, []);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  // Texto de descripción de ejemplo
+  const handlePress = () => {
+    // Agregar al carrito
+    addToCart(product);
+    // Cambiar el ícono y animarlo
+    setCartIcon("check-circle");
+    Animated.sequence([
+      Animated.timing(iconAnimation, {
+        toValue: 1.5, // Aumentar el tamaño del ícono
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(iconAnimation, {
+        toValue: 1, // Volver al tamaño original
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // Cambiar de vuelta el ícono después de la animación
+      setCartIcon("cart-plus");
+    });
+  };
   const description =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
-  // Límite de caracteres antes de mostrar "Leer más"
   const CHAR_LIMIT = 100;
   const showReadMore = description.length > CHAR_LIMIT;
 
@@ -55,7 +90,6 @@ const ProductDetails = () => {
         { transform: [{ translateY: slideAnim }], opacity: opacityAnim },
       ]}
     >
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.iconContainer}
@@ -69,28 +103,16 @@ const ProductDetails = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Imagen del producto */}
       <Image source={{ uri: imageUri }} style={styles.image} />
       <View style={styles.ratingContainer}>
-       
-       <Ionicons
-         name="star"
-         size={20}
-         color='gold'
-         
-       />
+        <Ionicons name="star" size={20} color="gold" />
         <Text style={styles.rating}> {stars}</Text>
-     </View>
-      {/* Título y precio */}
+      </View>
       <View style={styles.infoRow}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.price}>{`${price}$`}</Text>
       </View>
 
-      {/* Calificación */}
-      
-
-      {/* Botones de Descripción y Reseñas */}
       <View style={styles.tabRow}>
         <TouchableOpacity style={[styles.tabButton, styles.activeTab]}>
           <Text style={styles.activeTabText}>Description</Text>
@@ -100,7 +122,6 @@ const ProductDetails = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Categoría y Descripción */}
       <Text style={styles.category}>{`Category: ${category}`}</Text>
       <Text style={styles.description}>
         {isExpanded ? description : `${description.slice(0, CHAR_LIMIT)}...`}
@@ -114,11 +135,14 @@ const ProductDetails = () => {
         )}
       </Text>
 
-      {/* Botones de compra al final */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.buttonBuy}>
-          <FontAwesome name="cart-plus" size={24} color="black" />
-        </TouchableOpacity>
+      {/* ... (el resto de tu código) */}
+      <TouchableOpacity style={styles.buttonBuy} onPress={handlePress}>
+        <Animated.View style={{ transform: [{ scale: iconAnimation }] }}>
+          <FontAwesome name={cartIcon} size={24} color="black" />
+        </Animated.View>
+      </TouchableOpacity>
+      {/* ... (el resto de tu código) */}
         <TouchableOpacity style={styles.buttonPrimary}>
           <Text style={styles.buttonText}>Buy Now</Text>
         </TouchableOpacity>
@@ -127,7 +151,7 @@ const ProductDetails = () => {
           style={{
             position: "absolute",
             bottom: 0,
-            left: "40%", // Centra el componente horizontalmente con ancho de 20%
+            left: "40%",
             marginBottom: 2,
             height: 5,
             backgroundColor: "#e0e0e2",
@@ -143,7 +167,6 @@ const ProductDetails = () => {
     </Animated.View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -200,8 +223,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 5,
-    alignContent:'flex-end',
-    justifyContent:'flex-end',
+    alignContent: "flex-end",
+    justifyContent: "flex-end",
     gap: 4,
   },
   rating: {
