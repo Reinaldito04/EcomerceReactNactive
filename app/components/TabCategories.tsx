@@ -1,14 +1,18 @@
+// TabCategories.tsx
 import { StyleSheet, View, FlatList } from "react-native";
 import React from "react";
 import { useState } from "react";
 import TabData from "./data/TabData";
 import TabItem from "./TabItem";
 
-const TabCategories = () => {
-  const [activeTab, setActiveTab] = useState<number | null>(null);
+interface TabCategoriesProps {
+  selectedCategory: string | null; // Cambiar a string
+  setSelectedCategory: (category: string | null) => void; // Cambiar a string
+}
 
-  const handleTabPress = (id: number) => {
-    setActiveTab(id === activeTab ? null : id); // Si ya está activo, desactívalo, de lo contrario, actívalo
+const TabCategories: React.FC<TabCategoriesProps> = ({ selectedCategory, setSelectedCategory }) => {
+  const handleTabPress = (title: string) => {
+    setSelectedCategory(title === selectedCategory ? null : title); // Cambia a título
   };
 
   return (
@@ -19,11 +23,11 @@ const TabCategories = () => {
         renderItem={({ item }) => (
           <TabItem
             item={item}
-            isActive={item.id === activeTab} // Pasa el estado de activación
-            onPress={() => handleTabPress(item.id)} // Llama a la función al presionar
+            isActive={item.title === selectedCategory} // Comparar con el título
+            onPress={() => handleTabPress(item.title)} // Usar el título
           />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.title} // Cambiar a title
         showsHorizontalScrollIndicator={false}
       />
     </View>

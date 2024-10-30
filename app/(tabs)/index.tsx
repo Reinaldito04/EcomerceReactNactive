@@ -16,8 +16,8 @@ import Slider from "../components/Slider";
 import TabCategories from "../components/TabCategories";
 import ProductsList from "../components/ProductosList";
 
-export default function CategoryTabs() {
-  const [selectedCategory, setSelectedCategory] = useState("");
+const CategoryTabs: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Cambiar tipo a string
   const width = Dimensions.get("window").width;
 
   return (
@@ -52,13 +52,16 @@ export default function CategoryTabs() {
             </TouchableOpacity>
           </View>
           
-          <TabCategories />
-          <ProductsList />
+          <TabCategories 
+            selectedCategory={selectedCategory} 
+            setSelectedCategory={setSelectedCategory} // Pasa la función para actualizar el estado
+          />
+          <ProductsList selectedCategory={selectedCategory}  />
         </ScrollView>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
     width: "100%",
   },
   contentContainer: {
@@ -104,3 +107,5 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
 });
+
+export default CategoryTabs;

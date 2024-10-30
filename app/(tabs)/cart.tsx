@@ -13,11 +13,7 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { router } from "expo-router";
 import { useCartStore } from "../components/store/useCartStore";
 import CartProducts from "../components/CartProducts";
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Cart = () => {
@@ -25,16 +21,9 @@ const Cart = () => {
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   const clearCart = useCartStore((state) => state.clearCart);
   // ref
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = useMemo(() => ["50%", "90%"], []);
 
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+ 
 
   const totalAmount = cartItems
     .reduce((total, item) => total + item.price * item.quantity, 0)
@@ -43,7 +32,6 @@ const Cart = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-                    <BottomSheetModalProvider>
 
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
@@ -94,18 +82,23 @@ const Cart = () => {
               </View>
                 <TouchableOpacity
                   style={styles.buttonCheck}
-                  onPress={handlePresentModalPress}
+                  
+                  onPress={() => router.push({
+                    pathname: "/payment",
+                    params: {
+                      totalAmount: totalAmount,
+                      Iva: Iva,
+                      total: (Number(totalAmount) + Number(Iva)).toFixed(2),
+                    },
+                  }
+                    
+
+                  )}
+                 
                 >
                   <Text style={styles.buttonText}>Proceed to Checkout</Text>
                 </TouchableOpacity>
-                <BottomSheetModal
-                  ref={bottomSheetModalRef}
-                  onChange={handleSheetChanges}
-                >
-                  <BottomSheetView style={styles.contentContainer}>
-                    <Text>Awesome 🎉</Text>
-                  </BottomSheetView>
-                </BottomSheetModal>
+               
             </View>
           </>
         ) : (
@@ -118,7 +111,6 @@ const Cart = () => {
           </View>
         )}
       </SafeAreaView>
-      </BottomSheetModalProvider>
 
     </GestureHandlerRootView>
   );
@@ -128,25 +120,8 @@ export default Cart;
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#f5f5f5" },
-  contentContainer: {
-    flex: 1,
-    padding: 36,
-    alignItems: "center",
-  },
-  bottomSheetContent: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
+
+ 
   containerPrice: {
     flexDirection: "row",
     justifyContent: "space-between",

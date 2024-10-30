@@ -29,7 +29,6 @@ export default function TabLayout() {
           marginBottom: 20,
           shadowOpacity: 0.2,
           shadowRadius: 5,
-          zIndex: 1, // Añadir zIndex para asegurar la posición en el orden visual
         },
         tabBarActiveTintColor: "#1DA1F2",
         tabBarInactiveTintColor: "#FFFFFF",
@@ -62,7 +61,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      
+    
     </Tabs>
   );
 }
